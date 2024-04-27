@@ -57,6 +57,28 @@ npm run build
 ```
 El archivo `.github/workflows/firebase-hosting-merge.yml` está configurado para desplegar automáticamente a Firebase Hosting cuando se realiza un merge a la rama main.
 
+## Estructura de Carpetas del Proyecto
+
+A continuación se describe la organización del código fuente dentro de la carpeta `src`:
+
+### Descripciones Detalladas
+
+- `/assets`: Contiene recursos gráficos como logos e imágenes que se pueden utilizar en la UI de la aplicación.
+
+- `/components`: Incluye componentes de React como `CustomAppBar.tsx` para la barra de navegación y `CustomTextFieldLanguage.tsx` que podrían ser campos de entrada personalizados, etc.
+
+- `/firebase`: Almacena la configuración de Firebase, por ejemplo, la inicialización del SDK de Firebase y la configuración de autenticación.
+
+- `/models`: Define las estructuras de datos o interfaces, por ejemplo `github.ts` podría contener la definición de tipos para los objetos que interactúan con la API de GitHub.
+
+- `/services`: Contiene los servicios o utilidades, como `home_service.ts` y `login_service.ts`, que encapsulan las llamadas a la API y el manejo de la data.
+
+- `/views`: Compone la interfaz de usuario de la aplicación, con archivos como `Home.tsx` y `Login.tsx` representando diferentes páginas o rutas en la aplicación.
+
+Esta estructura de carpetas está diseñada para mantener el proyecto ordenado y modular, haciendo que el código sea más fácil de mantener y escalar.
+
+
+
 ---
 ¡Espero que disfrutes utilizando GitHub Viewer tanto como yo disfrute desarrollándolo!
 
