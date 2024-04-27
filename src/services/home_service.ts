@@ -12,21 +12,54 @@ export function useHome() {
     const [listRepos, setListRepos] = useState<RepositoryGitHub[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRepos, setTotalRepos] = useState(0);
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
+    const [filters, setFilters] = React.useState({
+        devLanguage: '',
+        created: 'all',
+        stars: 'all',
+        visibility: 'all',
+        order: 'updated:desc',
+        search: ''
+    });
     const accessToken = localStorage.getItem('accessToken') || '';
     const octokit = new Octokit({ auth: accessToken });
-    type RepoType = 'all' | 'owner' | 'public' | 'private' | 'member';
-    type SortType = "updated" | "stars" | "forks" | "help-wanted-issues";
     const userName = localStorage.getItem('username') || '';
+    type SortOption = "stars" | "forks" | "help-wanted-issues" | "updated" | undefined;
+    type SortOrder = "desc" | "asc" | undefined;
 
 
-    const loadRepos = useCallback(async (page = currentPage, sort: SortType = 'updated', type: RepoType = 'all') => {
+    const loadRepos = useCallback(async (page = currentPage) => {
         setIsLoading(true);
         try {
+
+            let q = `user:${userName}`;
+            if (filters.devLanguage && filters.devLanguage !== '') {
+                q += ` language:${filters.devLanguage}`;
+            }
+            if (filters.visibility && filters.visibility !== 'all') {
+                q += ` is:${filters.visibility}`;
+            }
+            if (filters.stars !== 'all') {
+                q += ` stars:${filters.stars}`;
+            }
+            if (filters.created && filters.created !== 'all') {
+                const date = new Date();
+                if (filters.created == 'currentYear') {
+                    const lastYearDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split('T')[0];
+                    q += ` created:>=${lastYearDate}`;
+                } else if (filters.created == 'currentMonth') {
+                    const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+                    q += ` created:>=${firstDayOfMonth}`;
+                }
+            }
+            if (filters.search && filters.search !== '') {
+                q += ` in:name ${filters.search}`;
+            }
             const response = await octokit.rest.search.repos({
-                q: `user:${userName}`,
-                type: type,
-                sort: sort,
-                per_page: 8,
+                q: q,
+                sort: filters.order.split(':')[0] as SortOption,
+                order: filters.order.split(':')[1] as SortOrder,
+                per_page: 9,
                 page: page
             });
             setTotalRepos(response.data.total_count);
@@ -38,8 +71,11 @@ export function useHome() {
             setErrorOccurred(true);
             setIsLoading(false);
         }
-    }, []);
+    }, [currentPage, filters, userName, setIsLoading, setTotalRepos, setListRepos, setErrorOccurred]);
 
+    useEffect(() => {
+        loadRepos(currentPage);
+    }, [currentPage, filters, loadRepos]);
 
     function cleanError(){
         setErrorOccurred(false);
@@ -49,8 +85,6 @@ export function useHome() {
         const userData = localStorage.getItem('accessToken');
         if (!userData || userData === '') {
             navigate('/');
-        }else{
-            loadRepos();
         }
     }, []);
 
@@ -60,7 +94,8 @@ export function useHome() {
         loadRepos(newPage);
     };
 
-    return {listRepos, isLoading, errorOcurred, cleanError, currentPage, handleChangePage, totalRepos} as const;
+    return {listRepos, isLoading, errorOcurred, cleanError, currentPage, handleChangePage, totalRepos, setDrawerOpen,
+        drawerOpen, setFilters, filters} as const;
 }
 
 export function useAppBar() {
