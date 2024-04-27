@@ -77,6 +77,20 @@ A continuación se describe la organización del código fuente dentro de la car
 
 Esta estructura de carpetas está diseñada para mantener el proyecto ordenado y modular, haciendo que el código sea más fácil de mantener y escalar.
 
+## Estrategia de Ramificación con Gitflow
+
+Este proyecto implementa la estrategia de ramificación Gitflow, que es un modelo escalable y robusto para manejar el desarrollo de software. Aquí hay una descripción breve de cómo se organizan las ramas y su propósito dentro del flujo de trabajo del proyecto:
+
+- `main`: La rama principal que contiene el código de producción, donde el código alcanza el estado más estable después de ser probado en otras ramas.
+- `dev`: La rama de desarrollo donde todas las características, arreglos y mejoras se fusionan antes de ser desplegadas a producción. Esta rama contiene el estado más reciente del próximo lanzamiento.
+- `feat/x`: Ramas de características donde se desarrollan nuevas funcionalidades. Cada característica tiene su propia rama (por ejemplo, `feat/new-login` para una nueva funcionalidad de inicio de sesión).
+- `fix/x`: Ramas de correcciones donde se arreglan bugs. Al igual que con las características, cada corrección tiene su propia rama (por ejemplo, `fix/login-error`).
+
+El trabajo se combina en `dev` para pruebas de integración. Una vez que `dev` es estable y está listo para un lanzamiento, se fusiona en `main`.
+
+Para contribuir al proyecto, crea una rama a partir de `dev` siguiendo el prefijo correspondiente (feat/ o fix/) dependiendo del tipo de trabajo. Después de completar el trabajo y las pruebas, crea un Pull Request hacia `dev`.
+
+La adopción de Gitflow permite una gestión organizada de las versiones, proporcionando claridad y un proceso establecido para la colaboración y el despliegue de software.
 
 
 ---
