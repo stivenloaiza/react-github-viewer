@@ -33,7 +33,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import {LanguageInput} from "../components/CustomTextfieldLanguage.tsx";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {blue, green, orange, red} from "@mui/material/colors";
 import {RepositoryGitHub} from "../models/github.ts";
 
@@ -43,13 +43,13 @@ export function Home() {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
     const [openShow, setOpenShow] = useState(false);
-    const [selectedRepo, setSelectedRepo] = useState<RepositoryGitHub>(null);
+    const [selectedRepo, setSelectedRepo] = useState<RepositoryGitHub | null>(null);
     const { isLoading, errorOcurred, cleanError, listRepos , currentPage,
         handleChangePage, totalRepos, setDrawerOpen, drawerOpen,
         setFilters, filters} = useHome();
 
-    const toggleDrawer = (open: boolean) => (event) => {
-        if (event.key === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    const toggleDrawer = (open: boolean) => (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+        if (event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift') {
             return;
         }
         setDrawerOpen(open);
@@ -63,8 +63,9 @@ export function Home() {
 
     };
 
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const searchTerm = (event.target as HTMLInputElement).value;
+        setSearchTerm(searchTerm);
     };
 
     const handleClickOpenShow = (repo: RepositoryGitHub) => {
