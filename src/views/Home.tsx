@@ -459,8 +459,8 @@ export function Home() {
                         <Typography variant="subtitle1" sx={{ p: 1 }}>
                             Total: {totalRepos}
                         </Typography>
-                        <Typography variant="subtitle1" sx={{ p: 1 }}>
-                            V: 0.0.2
+                        <Typography variant="caption" sx={{ p: 1 }}>
+                            V 0.0.3
                         </Typography>
                     </Toolbar>
                 </AppBar>
